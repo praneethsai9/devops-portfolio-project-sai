@@ -1,0 +1,118 @@
+# ============================================
+# Azure DevOps CI Pipeline
+# ============================================
+
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    include:
+    - src/*
+    - azure-pipelines.yml
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  nodeVersion: '18.x'
+  dockerRegistryServiceConnection: 'ACRConnection'
+  imageRepository: 'myapp'
+  containerRegistry: 'devopsportfolio.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  imageName: '$(containerRegistry)/$(imageRepository)'
+
+stages:
+
+# ============================================
+# STAGE 1: BUILD
+# ============================================
+- stage: Build
+  displayName: Build and Test
+  jobs:
+  - job: BuildJob
+    displayName: Build Job
+    steps:
+
+    # Step 1: Display Node version
+    - task: NodeTool@0
+      inputs:
+        versionSpec: $(nodeVersion)
+      displayName: 'Install Node.js'
+
+    # Step 2: Install dependencies
+    - script: |
+        cd src
+        npm ci
+      displayName: 'Install dependencies'
+
+    # Step 3: Run linting (optional)
+    - script: |
+        cd src
+        npm run lint --if-present
+      displayName: 'Run linting'
+      continueOnError: true
+
+    # Step 4: Run tests
+    - script: |
+        cd src
+        npm test -- --coverage
+      displayName: 'Run tests'
+
+    # Step 5: Publish test results
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'src/coverage/junit.xml'
+        searchFolder: '$(System.DefaultWorkingDirectory)'
+        publishRunAttachments: true
+      condition: always()
+      displayName: 'Publish test results'
+
+    # Step 6: Publish code coverage
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: 'src/coverage/cobertura-coverage.xml'
+      condition: always()
+      displayName: 'Publish code coverage'
+
+    # Step 7: Build Docker image
+    - script: |
+        docker build -t $(imageName):$(Build.BuildId) -t $(imageName):latest .
+      displayName: 'Build Docker image'
+      
+    # Step 8: Login to ACR
+    - task: Docker@2
+      inputs:
+        command: login
+        containerRegistry: $(dockerRegistryServiceConnection)
+      displayName: 'Login to ACR'
+
+    # Step 9: Push Docker image to ACR
+    - task: Docker@2
+      inputs:
+        command: push
+        repository: $(imageName)
+        tags: |
+          $(Build.BuildId)
+          latest
+        containerRegistry: $(dockerRegistryServiceConnection)
+      displayName: 'Push image to ACR'
+
+    # Step 10: Create build artifact
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'build-artifacts'
+      displayName: 'Publish build artifacts'
