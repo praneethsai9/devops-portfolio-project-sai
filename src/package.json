@@ -1,0 +1,33 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "My DevOps Portfolio REST API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "devops",
+    "nodejs",
+    "api",
+    "express"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  }
+}
