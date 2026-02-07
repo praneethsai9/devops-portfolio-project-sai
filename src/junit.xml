@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="10" failures="0" errors="0" time="0.404">
+  <testsuite name="API Endpoints" errors="0" failures="0" skipped="0" timestamp="2026-02-07T13:23:44" time="0.375" tests="10">
+    <testcase classname="API Endpoints Health Checks should return healthy status on /health" name="API Endpoints Health Checks should return healthy status on /health" time="0.033">
+    </testcase>
+    <testcase classname="API Endpoints Health Checks should return ready status on /ready" name="API Endpoints Health Checks should return ready status on /ready" time="0.005">
+    </testcase>
+    <testcase classname="API Endpoints GET /api/items should return all items" name="API Endpoints GET /api/items should return all items" time="0.005">
+    </testcase>
+    <testcase classname="API Endpoints GET /api/items/:id should return a specific item" name="API Endpoints GET /api/items/:id should return a specific item" time="0.004">
+    </testcase>
+    <testcase classname="API Endpoints GET /api/items/:id should return 404 for non-existent item" name="API Endpoints GET /api/items/:id should return 404 for non-existent item" time="0.03">
+    </testcase>
+    <testcase classname="API Endpoints POST /api/items should create a new item with valid data" name="API Endpoints POST /api/items should create a new item with valid data" time="0.027">
+    </testcase>
+    <testcase classname="API Endpoints POST /api/items should reject item with missing name" name="API Endpoints POST /api/items should reject item with missing name" time="0.005">
+    </testcase>
+    <testcase classname="API Endpoints POST /api/items should reject item with short name" name="API Endpoints POST /api/items should reject item with short name" time="0.003">
+    </testcase>
+    <testcase classname="API Endpoints POST /api/items should reject item with missing description" name="API Endpoints POST /api/items should reject item with missing description" time="0.005">
+    </testcase>
+    <testcase classname="API Endpoints Error Handling should handle 404 for unknown routes" name="API Endpoints Error Handling should handle 404 for unknown routes" time="0.002">
+    </testcase>
+  </testsuite>
+</testsuites>
